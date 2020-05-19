@@ -1,0 +1,4 @@
+{
+    "python.pythonPath": "/home/sandbox/.virtualenvs/webdev/bin/python",
+    "python.linting.pylintArgs": ["--load-plugins", "pylint-flask", "pyling-flask-sqlalchemy"]
+}
