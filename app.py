@@ -17,7 +17,7 @@ api = Api(app)
 # Change the url to the authentication endpoint
 # app.config['JWT_AUTH_URL_RULE'] = "/login"
 # Token Expiration Time
-app.config['JWT_EXPIRATION_DELTA'] = timedelta(seconds = 300)
+app.config['JWT_EXPIRATION_DELTA'] = timedelta(seconds=300)
 
 @app.before_first_request
 def create_tables():
