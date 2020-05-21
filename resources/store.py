@@ -7,7 +7,7 @@ class Store(Resource):
         store = StoreModel.find_by_name(name) 
         if store:
             return store.json() 
-        return {"message": "Store not found."}, 404 
+        return {"message": "Store '{}' not found.".format(name)}, 404 
 
     def post(self, name):
         if StoreModel.find_by_name(name):
@@ -18,17 +18,17 @@ class Store(Resource):
             store.save_to_db()
         except:
             return {"message": "An error ocurred while creating the store."}, 500
-
-        return store.json(), 201
+        return store.json(), 201 # 201 created
 
     def delete(self, name):
         store = StoreModel.find_by_name(name)
 
         if store: 
             store.delete_from_db()
-
-        return {"message": "Store '{}' deleted".format(name)}
-
+            return {"message": "Store '{}' deleted".format(name)}
+       
+        return {"message": "Store '{}' not found.".format(name)}
+        
 class StoreList(Resource):
     def get(self):
         return {"stores": [store.json() for store in StoreModel.find_all()]}

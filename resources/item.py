@@ -21,7 +21,7 @@ class Item(Resource):
         item = ItemModel.find_by_name(name)
         if item:
             return item.json()
-        return {"message": "Item not found."}, 404
+        return {"message": "Item '{}' not found.".format(name)}, 404
 
     def post(self, name):
         if ItemModel.find_by_name(name):
@@ -35,18 +35,18 @@ class Item(Resource):
         except:
             return {"message": "An error ocurred inserting the item."}, 500 # Internal Server Error
 
-        return item.json(), 201          # 201 created
+        return item.json(), 201 # 201 created
 
     def delete(self, name):
         item = ItemModel.find_by_name(name)
+
         if item:
             item.delete_from_db()
             return {"message": "Item '{}' deleted.".format(name)}
-        return {'message': 'Item not found.'}, 404
+        return {"message": "Item '{}' not found.".format(name)}, 404
 
     def put(self, name):
         data = Item.parser.parse_args()
-        
         item = ItemModel.find_by_name(name)
 
         if item:

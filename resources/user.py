@@ -18,27 +18,28 @@ class UserRegister(Resource):
 
     def post(self):
         data = UserRegister.parser.parse_args()
+        username = data["username"]
 
-        if UserModel.find_by_username(data["username"]):
-            return {"message": "A user with that username already exists."}, 400
+        if UserModel.find_by_username(username):
+            return {"message": "User '{}' already exists.".format(username)}, 400
 
         user = UserModel(**data) # "INSERT INTO users VALUES (NULL, ?, ?)"
         user.save_to_db()
-
         return {"message": "User created succesfully."}, 201
 
 class User(Resource):
     @classmethod
     def get(cls, user_id):
         user = UserModel.find_by_id(user_id)
-        if not user:
-            return {"message": "User '{}' not found".format(user_id)}, 404
-        return user.json()  
-
+        if user:
+            return user.json()  
+        return {"message": "User '{}' not found".format(user_id)}, 404
+        
     @classmethod
     def delete(cls, user_id):
         user = UserModel.find_by_id(user_id)
-        if not user:
-            return {"message": "User '{}' not found".format(user_id)}, 404
-        user.delete_from_db()
-        return {"message": "User '{}' deleted.".format(user_id)}, 200
+        if user:
+            user.delete_from_db()
+            return {"message": "User '{}' deleted.".format(user_id)}, 200
+
+        return {"message": "User '{}' not found".format(user_id)}, 404
