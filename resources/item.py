@@ -1,68 +1,44 @@
+import sqlite3
 from flask_restful import Resource, reqparse
-from flask_jwt import jwt_required
-from models.item import ItemModel
+from models.user import UserModel
 
 
-class Item(Resource):  
+class UserRegister(Resource):
+    
     parser = reqparse.RequestParser()
-    parser.add_argument("price",
-                        type = float,
-                        required = True,
-                        help = "this field can't be left blank!"
-                        )
-    parser.add_argument("store_id",
-                        type = int,
-                        required = True,
-                        help = "Every item needs a store_id."
-                        )
+    parser.add_argument("username", 
+        type = str,
+        required = True,
+        help = "This field cannot be blank.")
+    
+    parser.add_argument("password", 
+        type = str,
+        required = True,
+        help = "This field cannot be blank.")
 
-    @jwt_required()
-    def get(self, name):
-        item = ItemModel.find_by_name(name)
-        if item:
-            return item.json()
-        return {"message": "Item not found."}, 404
+    def post(self):
+        data = UserRegister.parser.parse_args()
 
-    def post(self, name):
-        if ItemModel.find_by_name(name):
-            return {"message": "An item with name '{}' already exists.".format(name)}, 400
+        if UserModel.find_by_username(data["username"]):
+            return {"message": "A user with that username already exists."}, 400
 
-        data = Item.parser.parse_args()
-        item = ItemModel(name, **data) # data["price"], data["store_id"]
-        
-        try:
-            item.save_to_db()
-        except:
-            return {"message": "An error ocurred inserting the item."}, 500 # Internal Server Error
+        user = UserModel(**data) # "INSERT INTO users VALUES (NULL, ?, ?)"
+        user.save_to_db()
 
-        return item.json(), 201          # 201 created
+        return {"message": "User created succesfully."}, 201
 
-    def delete(self, name):
-        item = ItemModel.find_by_name(name)
-        if item:
-            item.delete_from_db()
-            return {"message": "Item deleted."}
-        return {'message': 'Item not found.'}, 404
+class User(Resource):
+    @classmethod
+    def get(cls, user_id):
+        user = UserModel.find_by_id(user_id)
+        if not user:
+            return {"message": "User '{}' not found".format(user_id)}, 404
+        return user.json()  
 
-    def put(self, name):
-        data = Item.parser.parse_args()
-        
-        item = ItemModel.find_by_name(name)
-
-        if item is None:
-            item = ItemModel(name, **data) # data["price"], data["store_id"]
-        else:
-            item.price = data["price"]
-        
-        item.save_to_db()
-        return item.json()
-
-
-class ItemList(Resource):
-    def get(self):
-        return {"items": [item.json() for item in ItemModel.find_all()]} 
-        # return {"items": list(map(lambda x: x.json(), ItemModel.query.all()))} # the same 
-
-        # Use map, filter, reduce if your team is using others languages too. 
-        # Else use list comprehension 
-        # List comprehension is faster! 
+    @classmethod
+    def delete(cls, user_id):
+        user = UserModel.find_by_id(user_id)
+        if not user:
+            return {"message": "User '{}' not found".format(user_id)}, 404
+        user.delete_from_db()
+        return {"message": "User '{}' deleted.".format(user_id)}, 200
