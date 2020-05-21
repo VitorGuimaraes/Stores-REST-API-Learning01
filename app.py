@@ -1,5 +1,5 @@
 from flask import Flask
-from flask_restful import Resource, Api
+from flask_restful import Api
 from flask_jwt import JWT 
 from datetime import timedelta
 
@@ -11,6 +11,7 @@ from resources.store import Store, StoreList
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///data.db"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+# If the flask extensions raises an error, it can send their own error messages
 app.config['PROPAGATE_EXCEPTIONS'] = True
 app.secret_key = "vitor" # it should be secret
 api = Api(app)
