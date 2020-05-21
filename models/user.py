@@ -7,22 +7,12 @@ class UserModel(db.Model):
     username = db.Column(db.String(80))
     password = db.Column(db.String(80))
 
-    def json(self):
-        return {
-            "id": self.id, 
-            "username": self.username
-        }
-
     def __init__(self, username, password):
         self.username = username
         self.password = password 
     
     def save_to_db(self):
         db.session.add(self)
-        db.session.commit()
-
-    def delete_from_db(self):
-        db.session.delete(self)
         db.session.commit()
 
     # Retrieve user by username
@@ -34,3 +24,5 @@ class UserModel(db.Model):
     @classmethod
     def find_by_id(cls, _id):
         return cls.query.filter_by(id = _id).first() # "SELECT * FROM users WHERE id=?"
+        
+        

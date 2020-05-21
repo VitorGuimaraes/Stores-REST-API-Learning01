@@ -49,10 +49,10 @@ class Item(Resource):
         
         item = ItemModel.find_by_name(name)
 
-        if item:
-            item.price = data["price"] 
+        if item is None:
+            item = ItemModel(name, **data) # data["price"], data["store_id"]
         else:
-            item = ItemModel(name, **data)
+            item.price = data["price"]
         
         item.save_to_db()
         return item.json()
@@ -60,9 +60,9 @@ class Item(Resource):
 
 class ItemList(Resource):
     def get(self):
-        return {"items": [item.json() for item in ItemModel.find_all()]} 
+        return {"items": [item.json() for item in ItemModel.query.all()]} 
         # return {"items": list(map(lambda x: x.json(), ItemModel.query.all()))} # the same 
 
         # Use map, filter, reduce if your team is using others languages too. 
         # Else use list comprehension 
-        # List comprehension is a bit faster! 
+        # List comprehension is faster! 
