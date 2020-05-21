@@ -17,14 +17,14 @@ api = Api(app)
 # Token Expiration Time
 app.config['JWT_EXPIRATION_DELTA'] = timedelta(seconds=300)
 
-# /auth endpoint (you can change with app.config['JWT_AUTH_URL_RULE'] = "/any"
-jwt = JWT(app, authenticate, identity) # /auth endpoint
+jwt = JWTManager(app) 
 api.add_resource(Item, "/item/<string:name>") 
 api.add_resource(ItemList, "/items")
 api.add_resource(Store, "/store/<string:name>")
 api.add_resource(StoreList, "/stores")
 api.add_resource(UserRegister, "/register")
 api.add_resource(User, "/user/<int:user_id>")
+api.add_resource(UserLogin, "/login")
 
 
 if __name__ == "__main__":
