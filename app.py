@@ -20,8 +20,7 @@ api = Api(app)
 # Token Expiration Time
 app.config['JWT_EXPIRATION_DELTA'] = timedelta(seconds=300)
 
-jwt = JWT(app, authenticate, identity) # /auth or config from line 13
-
+jwt = JWT(app, authenticate, identity) # /auth endpoint
 api.add_resource(Item, "/item/<string:name>") 
 api.add_resource(ItemList, "/items")
 api.add_resource(Store, "/store/<string:name>")
