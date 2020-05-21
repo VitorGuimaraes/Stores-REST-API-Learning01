@@ -18,6 +18,13 @@ api = Api(app)
 app.config['JWT_EXPIRATION_DELTA'] = timedelta(seconds=300)
 
 jwt = JWTManager(app) 
+
+@jwt.user_claims_loader
+def add_claims_to_jwt(identity): # Instead of hard-coding, you should read from a config file or a database
+    if identity == 1:
+        return {"is_admin": True}
+    return {"is_admin": False}
+
 api.add_resource(Item, "/item/<string:name>") 
 api.add_resource(ItemList, "/items")
 api.add_resource(Store, "/store/<string:name>")

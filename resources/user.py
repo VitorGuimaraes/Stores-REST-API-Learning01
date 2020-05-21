@@ -26,7 +26,7 @@ class UserRegister(Resource):
 
         user = UserModel(**data) # "INSERT INTO users VALUES (NULL, ?, ?)"
         user.save_to_db()
-        return {"message": "User created succesfully."}, 201
+        return {"message": "User '{}' created succesfully.".format(username)}, 201
 
 class User(Resource):
     @classmethod

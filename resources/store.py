@@ -26,7 +26,6 @@ class Store(Resource):
         if store: 
             store.delete_from_db()
             return {"message": "Store '{}' deleted".format(name)}
-       
         return {"message": "Store '{}' not found.".format(name)}
         
 class StoreList(Resource):
