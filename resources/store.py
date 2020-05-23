@@ -32,8 +32,8 @@ class StoreList(Resource):
     def get(self):
         return {"stores": [store.json() for store in StoreModel.find_all()]}
 
-        # return {"stores": list(map(lambda x: x.json(), StoreModel.query.all()))} # the same 
+        # return {"items": list(map(lambda x: x.json(), ItemModel.find_all()))} # the same 
 
         # Use map, filter, reduce if your team is using others languages too. 
         # Else use list comprehension 
-        # List comprehension is faster! 
+        # List comprehension is a bit faster! 
